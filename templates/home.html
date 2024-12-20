@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Kategoriler</h1>
+<ul class="category-list">
+    {% for category, items in categories.items() %}
+    <li>
+        <a href="/category/{{ category }}">{{ category }} ({{ category_counts[category] }} ürün)</a>
+    </li>
+    {% endfor %}
+</ul>
+
+<h1>Ürünler</h1>
+
+<!-- Arama Çubuğu -->
+<div class="search-container">
+    <input type="text" id="searchBar" placeholder="Ürün adını, açıklamayı, fiyatı veya kategoriyi arayın..." oninput="searchProducts()" />
+</div>
+
+<!-- Ürün Listesi -->
+<div id="productGrid" class="product-grid">
+    {% for product in products %}
+    <div class="product-item">
+        <a href="/product/{{ product.id }}">
+            <img src="{{ product.image_url or 'https://via.placeholder.com/250' }}" alt="{{ product.name }}">
+            <h3>{{ product.name }}</h3>
+            <p><strong>İlan No:</strong> {{ product.id }}</p>
+            <p><strong>Fiyat:</strong> {{ product.price }} TL</p>
+            <p><strong>Şehir:</strong> {{ product.city }}</p>
+            <p><strong>Kategori:</strong> {{ product.category }}</p>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+// Canlı arama işlevi
+async function searchProducts() {
+    const query = document.getElementById("searchBar").value.trim();
+
+    if (!query) {
+        return;  // Arama çubuğu boşsa hiçbir şey yapma
+    }
+
+    const response = await fetch(`/search-live?q=${query}`);
+    const products = await response.json();
+
+    const productGrid = document.getElementById("productGrid");
+    productGrid.innerHTML = "";
+
+    // Arama sonuçlarını ürün listesine ekle
+    products.forEach(product => {
+        const productItem = document.createElement("div");
+        productItem.classList.add("product-item");
+
+        productItem.innerHTML = `
+            <a href="/product/${product.id}">
+                <img src="${product.image_url}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                <p><strong>İlan No:</strong> ${product.id}</p>
+                <p><strong>Fiyat:</strong> ${product.price} TL</p>
+                <p><strong>Şehir:</strong> ${product.city}</p>
+                <p><strong>Kategori:</strong> ${product.category}</p>
+            </a>
+        `;
+
+        productGrid.appendChild(productItem);
+    });
+}
+</script>
+{% endblock %}

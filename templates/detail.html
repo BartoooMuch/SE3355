@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Ürün Detay{% endblock %}
+
+{% block content %}
+<h1>Ürün Detayları</h1>
+<p><strong>Ürün Adı:</strong> {{ product.name }}</p>
+<p><strong>Fiyat:</strong> {{ product.price }} TL</p>
+<p><strong>Açıklama:</strong> {{ product.description }}</p>
+<p><strong>Kategori:</strong> {{ product.category }}</p>
+<a href="/">Anasayfaya Dön</a>
+{% endblock %}

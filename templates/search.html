@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Arama{% endblock %}
+
+{% block content %}
+<h1>Arama Sayfası</h1>
+<form method="GET" action="/search">
+    <input type="text" name="q" placeholder="Ürün arayın...">
+    <button type="submit">Ara</button>
+</form>
+
+{% if results %}
+<h2>Arama Sonuçları</h2>
+<ul>
+    {% for product in results %}
+    <li>
+        <strong>{{ product.name }}</strong> - {{ product.price }} TL <br>
+        <a href="/product/{{ product.id }}">Detay Gör</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Hiçbir sonuç bulunamadı.</p>
+{% endif %}
+{% endblock %}
